@@ -1,6 +1,7 @@
 from tqdm.notebook import tqdm
 
-from sklearn.model_selection import train_test_split
+import numpy as np
+from PIL import Image
 
 import torch
 from torch import nn, optim
@@ -25,7 +26,15 @@ def load_checkpoint(model, checkpoint_PATH, optimizer, device='cuda'):
 model = AlexNet(num_classes=10)# .to(device)
 optimizer = optim.Adam(params = model.parameters(),lr=0.001)
 
-model, optimizer = load_checkpoint(model, './alexnet--epoch-1--accuracy-xxx.pth.tar', optimizer)
+model, optimizer = load_checkpoint(model, './alexnet--epoch-1--accuracy-0.1026.pth.tar', optimizer)
 
-# 推理
-print(model(torch.rand([4,3,224,224], device='cuda')))
+data = Image.open('./car.jpg')
+data = np.array(data) / 255 # [0,1]
+data = data.transpose(2, 0, 1) # 224,224,3 -> 3,224,224
+data = data[np.newaxis, :]
+data = torch.Tensor(data).to('cuda')
+
+classes = ('plane', 'car', 'bird', 'cat',
+           'deer', 'dog', 'frog', 'horse', 'ship', 'truck')
+
+print('Predicted label :', classes[model(data).argmax()])
