@@ -25,10 +25,10 @@ def load_checkpoint(model, checkpoint_PATH, optimizer, device='cuda'):
 
 device = 'cuda' if torch.cuda.is_available() else 'cpu'
 
-model = ResNet18(num_classes=10).to(device).to(device)
+model = ResNet(num_classes=10,depth=50).to(device).to(device)
 optimizer = optim.Adam(params = model.parameters(),lr=0.001)
 
-model, optimizer = load_checkpoint(model, './resnet--epoch-3--accuracy-0.5859.pth.tar', optimizer)
+model, optimizer = load_checkpoint(model, './resnet-50-2022-01-10 23:10:34.648011+08:00--epoch-5-acc-0.00.pth.tar', optimizer)
 
 data = Image.open('./car.jpg')
 data = np.array(data) / 255 # [0,1]
